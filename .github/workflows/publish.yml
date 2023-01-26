@@ -1,0 +1,60 @@
+name: Build Jekyll and Merge Index
+
+on:
+  push:
+    branches: [gh-pages] # modify this list if you use other names
+  workflow_dispatch:
+  workflow_call:
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  # Build job
+  build:
+    runs-on: ubuntu-latest
+    env:
+      idx-checkout-path: idx-pages
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+      # write index htmls into `simple` dir
+      # jekyII should keep `simple` dir
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ env.idx-checkout-path }}
+          path: simple
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+      # remove .git, avoiding security risk
+      - name: remove git info
+        run: rm -rf ./_site/simple/.git > /dev/null || exit 0
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+
+  # Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    runs-on: ubuntu-latest
+    needs: build
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1

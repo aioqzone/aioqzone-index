@@ -1,0 +1,73 @@
+name: Remove Assets from Index
+
+concurrency:
+  group: index
+  cancel-in-progress: false
+
+on:
+  workflow_dispatch:
+    inputs:
+      project:
+        type: string
+        description: project name
+      files:
+        type: string
+        description: asset names
+      index-branch:
+        type: string
+        description: index branch
+        required: false
+        default: idx-pages
+      republish:
+        type: boolean
+        description: whether republish the site or not
+        required: false
+        default: true
+
+jobs:
+  add:
+    name: Remove URLs from Index
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      idx-checkout-path: index
+    steps:
+      - name: checkout index branch
+        uses: actions/checkout@v3
+        with:
+          path: ${{ env.idx-checkout-path }}
+          ref: ${{ inputs.index-branch }}
+
+      - name: update simple index
+        env:
+          proj: ${{ inputs.project }}
+        run: |
+          cd ${{ env.idx-checkout-path }}
+
+          proj=$(echo ${proj} | tr "\-_." "-" | tr -s "-" | tr "A-Z" "a-z")
+          proj_html="${proj}/index.html"
+          if [ ! -f $proj_html ]; then exit; fi
+
+          for file in ${{ inputs.files }}; do
+              sed -i "/>${file}</ d" $proj_html
+          done;
+
+      - name: commit index changes
+        run: |
+          cd ${{ env.idx-checkout-path }}
+          git config --local user.name 'github-actions[bot]'
+          git config --local user.email 'github-actions[bot]@users.noreply.github.com'
+          git add .
+          git commit -m "remove assets \`${{ inputs.files }}\`"
+          git push
+
+  publish:
+    if: ${{ inputs.republish }}
+    needs: add
+    name: Republish Index Pages
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: aioqzone/gh-simple-api/.github/workflows/publish.yml@master
