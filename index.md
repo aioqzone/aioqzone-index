@@ -11,12 +11,9 @@ Add this section into `pyproject.toml`:
 
 ```toml
 [[tool.poetry.source]]
-# a name for this source
 name = "aioqzone-index"
-# your simple api url
-url = "https://aioqzone.github.io/aioqzone-index/simple/"
-default = false
-secondary = true
+url = "https://aioqzone.github.io/aioqzone-index/simple"
+priority = "supplemental"
 ```
 
 For more information, goto [poetry docs](https://python-poetry.org/docs/repositories/#simple-api-repository).
