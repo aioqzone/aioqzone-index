@@ -70,4 +70,4 @@ jobs:
       contents: read
       pages: write
       id-token: write
-    uses: aioqzone/gh-simple-api/.github/workflows/publish.yml@master
+    uses: ./.github/workflows/publish.yml
