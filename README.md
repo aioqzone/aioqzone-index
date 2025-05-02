@@ -26,7 +26,6 @@ pip install <package> -i "https://aioqzone.github.io/aioqzone-index/simple"
 - [qzemoji][qzemoji]
 - [aioqzone-feed][aioqzone-feed]
 - [pychaosvm][pychaosvm]
-- [tylisten][tylisten]
 - [slide-tc][slide-tc]
 
 
@@ -34,5 +33,4 @@ pip install <package> -i "https://aioqzone.github.io/aioqzone-index/simple"
 [qzemoji]: https://github.com/aioqzone/QzEmoji
 [aioqzone-feed]: https://github.com/aioqzone/aioqzone-feed
 [pychaosvm]: https://github.com/aioqzone/pychaosvm
-[tylisten]: https://github.com/JamzumSum/tylisten
 [slide-tc]: https://github.com/aioqzone/slide-tc
