@@ -6,7 +6,7 @@ aioqzone package index implemented with GitHub Page, following [PEP 503][pep-050
 
 ## Usage
 
-### Poetry
+### poetry
 
 ```toml
 [[tool.poetry.source]]
@@ -15,7 +15,15 @@ url = "https://aioqzone.github.io/aioqzone-index/simple"
 priority = "supplemental"
 ```
 
-### Pip
+### uv
+
+```toml
+[[tool.uv.index]]
+name = "aioqzone-index"
+url = "https://aioqzone.github.io/aioqzone-index/simple/"
+```
+
+### pip
 
 ```sh
 pip install <package> -i "https://aioqzone.github.io/aioqzone-index/simple"
